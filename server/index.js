@@ -11,7 +11,7 @@ app.get('/', (req, res) => { //can declare get our put route, first param is the
 });
 
 app.get('/api/users', (req, res) => {
-    res.send("Hello world users query");
+    res.send({message:"Hello world users query"});
     console.log(req.query);
     console.log(req.query.id);
 });
@@ -24,7 +24,7 @@ app.get('/api/users/:uid', (req, res) => {
 app.use(express.urlencoded());
 app.use(express.json());
 app.post('/api/users', (req, res) => {
-    res.send("Hello world users post");
+    res.send({message:"Hello world users post"});
     console.log(req.body);
     console.log(req.body.name);
 });
