@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginFragment extends Fragment {
     RetrofitInterface retrofitInterface;
     Retrofit retrofit;
-    final String URL = "http://192.168.86.71:300";
+    final String URL = "http://192.168.86.71:3000";
 
     public LoginFragment() {
         // Required empty public constructor
@@ -66,7 +66,7 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(URL + "/api/users/")
+                .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

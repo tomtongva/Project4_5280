@@ -1,53 +1,59 @@
-const express = require("express")
-const app = express()
-const port = 300
+const express = require("express");
+const app = express();
+const port = 3000;
+const jwt  = require("jsonwebtoken");
+const jwtSecret = "Group3KeyForJWT";
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
 });
 
-app.get('/', (req, res) => { //can declare get our put route, first param is the route, second param is the function that is executed
-    res.send("Hello world");
-});
+const jwtValidateUserMiddleware = (req, res, next) => {
+    console.log("validate user");
 
-app.get('/api/users', (req, res) => {
-    res.send({message:"Hello world users query"});
-    console.log(req.query);
-    console.log(req.query.id);
-});
-
-app.get('/api/users/:uid', (req, res) => {
-    res.send("Hello world users route ");
-    console.log(req.params);
-});
+    let token = req.header("x-jwt-token");
+    if (token) {
+        try {
+            console.log("verify " + token)
+            let decoded = jwt.verify(token, jwtSecret);
+            req.decodedToken = decoded;
+            console.log("user validated " + decoded);
+            next();
+        } catch (err) {
+            res.status(401).status({error: "Invalid token", fullError: err});
+        }
+    } else {
+        res.status(401).send({error: "Token is required"});
+    }
+}
 
 app.use(express.urlencoded());
 app.use(express.json());
-app.post('/api/users', (req, res) => {
-    res.send({message:"Hello world users post"});
+app.post("/api/auth", async (req, res) => {
+
+    let user = await findUser(req.body.email);
+    console.log("found " + user);
+    if (user._id) {
+        let token = jwt.sign({uid: user._id, name: user.name}, jwtSecret);
+        console.log("generating token for " + user.name);
+
+        res.send({email: user.email, name: user.name, token: token});
+    } else {
+        res.status(401).send({error: "You're not found"});
+    }
+});
+
+app.post('/api/users', jwtValidateUserMiddleware, (req, res) => {
+    console.log("send response back");
+    
+    let decodedToken = req.decodedToken
+
+    res.send({message:"Hello world users post ", data: {decoded: decodedToken}});
     console.log(req.body);
     console.log(req.body.name);
 });
 
-const myFirestMiddleWare = (req, res, next) => {
-    console.log("my first middle ware");
-    next();
-}
-app.use(myFirestMiddleWare) //global middlware
 
-console.log("Hello World");
-
-function printHello() {
-    console.log("printing hello");
-};
-
-printHello();
-
-const otherPrintHello = () => {
-    console.log("printing other hello");
-};
-
-otherPrintHello();
 
 const { MongoClient } = require("mongodb");
 // Connection URI
@@ -57,16 +63,26 @@ const uri =
 const client = new MongoClient(uri);
 async function run() {
   try {
-    // Connect the client to the server (optional starting in v4.7)
     await client.connect();
-    // Establish and verify connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Connected successfully to server");
+    
     var user = await client.db("users").collection("user").findOne({name: "John D"});
     console.log("user is " + user.name);
   } finally {
-    // Ensures that the client will close when you finish/error
     await client.close();
   }
 }
 run().catch(console.dir);
+
+async function findUser(email) {
+    try {
+        await client.connect();
+        
+        var user = await client.db("users").collection("user").findOne({email: email});
+        if (user) {
+            console.log("user is " + user.name);
+            return user;
+        }
+      } finally {
+        await client.close();
+      }
+}
