@@ -67,7 +67,8 @@ app.post('/api/signup', async (req, res) => {
         console.log("user exists " + user.email);
     }
 
-    res.send({message: "You're registered ", data: {id: userId}});
+    res.send({message: "You're registered ", id: userId, email: req.body.email, firstName: req.body.firstName, 
+        lastName: req.body.lastName, gender: req.body.gender, city: req.body.city});
 });
 
 

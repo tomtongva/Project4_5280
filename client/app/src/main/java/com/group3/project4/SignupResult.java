@@ -8,6 +8,7 @@ public class SignupResult {
     String firstName;
     String lastName;
     String city;
+    @SerializedName("email")
     String email;
     String password;
 
