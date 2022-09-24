@@ -28,7 +28,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginFragment extends Fragment {
     RetrofitInterface retrofitInterface;
     Retrofit retrofit;
-    final String URL = "http://192.168.86.71:3000";
 
     public LoginFragment() {
         // Required empty public constructor
@@ -39,7 +38,7 @@ public class LoginFragment extends Fragment {
     public interface IListener {
         public void signup();
 
-        public void loginSuccess();
+        public void loginSuccess(String email);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(Globals.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -117,7 +116,8 @@ public class LoginFragment extends Fragment {
                     public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
                         if (response.code() == 200) {
                             LoginResult result = response.body();
-                            Toast.makeText(getActivity(), "found you " + result.getName(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "found you " + result.getFirstName(), Toast.LENGTH_LONG).show();
+                            mListener.loginSuccess(result.getEmail());
                         } else {
                             Toast.makeText(getActivity(), "you were not found   ", Toast.LENGTH_LONG).show();
                         }

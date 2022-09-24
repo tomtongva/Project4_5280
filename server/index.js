@@ -33,11 +33,12 @@ app.post("/api/auth", async (req, res) => {
 
     let user = await findUser(req.body.email);
     console.log("found " + user);
-    if (user._id) {
+    if (user) {
         let token = jwt.sign({uid: user._id, name: user.name}, jwtSecret);
         console.log("generating token for " + user.name);
 
-        res.send({email: user.email, name: user.name, token: token});
+        res.send({email: user.email, firstName: user.firstName, lastName: user.lastName, gender: user.gender,
+            city: user.city, token: token});
     } else {
         res.status(401).send({error: "You're not found"});
     }
@@ -53,6 +54,22 @@ app.post('/api/users', jwtValidateUserMiddleware, (req, res) => {
     console.log(req.body.name);
 });
 
+app.post('/api/signup', async (req, res) => {
+    console.log("signup new user " + req.body.email);
+    let user = await findUser(req.body.email)
+    console.log("does user exist "  + user)
+    let userId;
+    if (null == user) {
+        userId = await createUser(req.body.email, req.body.password, req.body.firstName, req.body.lastName, req.body.gender,
+            req.body.city);
+        console.log("got user id " + userId);
+    } else {
+        console.log("user exists " + user.email);
+    }
+
+    res.send({message: "You're registered ", data: {id: userId}});
+});
+
 
 
 const { MongoClient } = require("mongodb");
@@ -61,17 +78,28 @@ const uri =
   "mongodb://localhost:27017/?maxPoolSize=20&w=majority"; //mongodb+srv://localhost:27017/?maxPoolSize=20&w=majorit
 // Create a new MongoClient
 const client = new MongoClient(uri);
-async function run() {
-  try {
-    await client.connect();
-    
-    var user = await client.db("users").collection("user").findOne({name: "John D"});
-    console.log("user is " + user.name);
-  } finally {
-    await client.close();
-  }
+
+async function createUser(email, password, firstName, lastName, gender, city) {
+    try {
+        await client.connect();
+        
+        const doc = {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            city: city
+        }
+        const result = await client.db("users").collection("user").insertOne(doc);
+        if (result) {
+            console.log("user created with id " + result.insertedId);
+            return result.insertedId;
+        }
+      } finally {
+        await client.close();
+      }
 }
-run().catch(console.dir);
 
 async function findUser(email) {
     try {

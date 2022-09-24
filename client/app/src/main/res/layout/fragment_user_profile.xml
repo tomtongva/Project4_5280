@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.group3.project4.UserProfileFragment"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/inputUserProfileCity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="City"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/inputUserProfileFirstName"
+        app:layout_constraintTop_toBottomOf="@+id/inputUserProfileFirstName" />
+
+    <EditText
+        android:id="@+id/inputUserProfileFirstName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="First Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/inputUserProfileLastName"
+        app:layout_constraintTop_toBottomOf="@+id/inputUserProfileLastName" />
+
+    <EditText
+        android:id="@+id/inputUserProfileLastName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageUserProfile" />
+
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/inputUserProfileCity"
+        app:layout_constraintTop_toBottomOf="@+id/inputUserProfileCity">
+
+        <RadioButton
+            android:id="@+id/radioBtnUserProfileFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="296dp" />
+
+        <RadioButton
+            android:id="@+id/radioBtnUserProfileMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            tools:layout_editor_absoluteX="260dp"
+            tools:layout_editor_absoluteY="303dp" />
+    </RadioGroup>
+
+    <ImageView
+        android:id="@+id/imageUserProfile"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:src="@drawable/ic_baseline_person_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_baseline_person_24" />
+
+    <ImageButton
+        android:id="@+id/imageButtonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_baseline_save_24"
+        app:layout_constraintEnd_toStartOf="@+id/imageUserProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageUserProfile" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_baseline_exit_to_app_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageUserProfile"
+        app:layout_constraintTop_toTopOf="@+id/imageUserProfile" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

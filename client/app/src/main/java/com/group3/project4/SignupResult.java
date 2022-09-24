@@ -2,15 +2,14 @@ package com.group3.project4;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResult {
-
+public class SignupResult {
+    @SerializedName("id")
     String id;
     String firstName;
     String lastName;
     String city;
     String email;
     String password;
-    String gender;
 
     public String getId() {
         return id;
@@ -58,13 +57,5 @@ public class LoginResult {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 }
