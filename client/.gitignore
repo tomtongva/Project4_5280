@@ -1,0 +1,16 @@
+*.iml
+*.apk
+*.aar
+*.zip
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+.vscode
+.project
+.settings
+.classpath
