@@ -96,7 +96,7 @@ app.post('/api/logout', async (req, res) => {
 const { MongoClient } = require("mongodb");
 // Connection URI
 const uri =
-  "mongodb://localhost:27017/?maxPoolSize=20&w=majority"; //mongodb+srv://localhost:27017/?maxPoolSize=20&w=majorit
+  "mongodb+srv://group35280:uncc2022@cluster0.rts9eht.mongodb.net/test" //"mongodb://localhost:27017/?maxPoolSize=20&w=majority"; //mongodb+srv://localhost:27017/?maxPoolSize=20&w=majorit
 // Create a new MongoClient
 const client = new MongoClient(uri);
 
