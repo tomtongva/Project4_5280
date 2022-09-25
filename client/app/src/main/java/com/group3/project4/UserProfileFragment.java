@@ -231,7 +231,7 @@ public class UserProfileFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_LONG).show();
                                 mListener.updateUserProfile();
                             } else {
-                                Toast.makeText(getActivity(), "Something went wrong with profile update", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Something went wrong. Logout and log back in.", Toast.LENGTH_LONG).show();
                             }
                         }
 

@@ -79,6 +79,8 @@ app.post('/api/signup', async (req, res) => {
         console.log("got user id " + userId);
     } else {
         console.log("user exists " + user.email);
+        res.status(401).send({error: "Unable to register at this time "});
+        return;
     }
 
     res.send({message: "You're registered ", id: userId, email: req.body.email, firstName: req.body.firstName, 
@@ -123,8 +125,13 @@ async function createUser(email, password, firstName, lastName, gender, city) {
 async function findUser(email, password) {
     try {
         await client.connect();
-        
-        var user = await client.db("users").collection("user").findOne({email: email, password: password});
+
+        var user;
+        if (password != undefined)
+            user = await client.db("users").collection("user").findOne({email: email, password: password});
+        else
+            user = await client.db("users").collection("user").findOne({email: email});
+
         if (user) {
             console.log("user is " + user.name);
             return user;
