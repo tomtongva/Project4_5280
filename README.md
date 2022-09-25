@@ -7,8 +7,8 @@
 
 ## Implementatoin
 APIs:
-	- Registration: /api/signup
-		- If the registering email is found in the database, user is presented with an error toast message.
+	- Registration: /api/signup<br />
+		- If the registering email is found in the database, user is presented with an error toast message. <br />
 	- Auth: /api/auth
 		- Both email and password must match.
 	- Protected APIS:
