@@ -38,7 +38,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.post("/api/auth", async (req, res) => {
 
-    let user = await findUser(req.body.email);
+    let user = await findUser(req.body.email, req.body.password);
     console.log("found " + user);
     if (user) {
         let token = jwt.sign({uid: user._id, name: user.firstName + " " + user.lastName, 
@@ -54,7 +54,6 @@ app.post("/api/auth", async (req, res) => {
 });
 
 app.post('/api/user/update', jwtValidateUserMiddleware, async (req, res) => {
-    console.log("the age is " + req.body.age);
     let updated = await updateUser(req.body.email, req.body.firstName, req.body.lastName, req.body.gender, req.body.city,
                                     req.body.age, req.body.weight, req.body.address);
     if (updated) {
@@ -121,11 +120,11 @@ async function createUser(email, password, firstName, lastName, gender, city) {
       }
 }
 
-async function findUser(email) {
+async function findUser(email, password) {
     try {
         await client.connect();
         
-        var user = await client.db("users").collection("user").findOne({email: email});
+        var user = await client.db("users").collection("user").findOne({email: email, password: password});
         if (user) {
             console.log("user is " + user.name);
             return user;
@@ -145,7 +144,7 @@ async function updateUser(email, firstName, lastName, gender, city, age, weight,
                                     age: age, weight: weight, address: address}};
         var updated = await client.db("users").collection("user").updateOne(filter, updateDoc);
         if (updated) {
-            console.log("user was updated " + age)
+            console.log("user was updated ")
         }
         return updated;
       } finally {

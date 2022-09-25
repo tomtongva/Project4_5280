@@ -38,7 +38,7 @@ public class SignupFragment extends Fragment {
     IListener mListener;
     public interface IListener {
         public void registerCancelled();
-        public void loginSuccess(String email);
+        public void loginSuccess(String email, String password);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class SignupFragment extends Fragment {
                             if (response.code() == 200) {
                                 SignupResult result = response.body();
                                 Toast.makeText(getActivity(), "You're signed up", Toast.LENGTH_LONG).show();
-                                mListener.loginSuccess(result.getEmail());
+                                mListener.loginSuccess(result.getEmail(), password);
                             } else {
                                 Toast.makeText(getActivity(), "Something went wrong with registration", Toast.LENGTH_LONG).show();
                             }

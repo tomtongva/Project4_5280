@@ -38,7 +38,7 @@ public class LoginFragment extends Fragment {
     public interface IListener {
         public void signup();
 
-        public void loginSuccess(String email);
+        public void loginSuccess(String email, String password);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class LoginFragment extends Fragment {
                         if (response.code() == 200) {
                             LoginResult result = response.body();
                             Toast.makeText(getActivity(), "found you " + result.getFirstName(), Toast.LENGTH_LONG).show();
-                            mListener.loginSuccess(result.getEmail());
+                            mListener.loginSuccess(result.getEmail(), inputPassword.getText().toString());
                         } else {
                             Toast.makeText(getActivity(), "you were not found   ", Toast.LENGTH_LONG).show();
                         }

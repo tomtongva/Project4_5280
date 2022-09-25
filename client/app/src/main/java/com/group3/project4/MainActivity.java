@@ -46,11 +46,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void loginSuccess(String email) {
-        setUser(email);
+    public void loginSuccess(String email, String password) {
+        setUser(email, password);
     }
 
-    private void setUser(String email) {
+    private void setUser(String email, String password) {
         RetrofitInterface retrofitInterface;
         Retrofit retrofit;
         retrofit = new Retrofit.Builder()
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
         retrofitInterface = retrofit.create(RetrofitInterface.class);
         HashMap<String, String> data = new HashMap<>();
         data.put("email", email);
+        data.put("password", password);
 
         Call<LoginResult> call = retrofitInterface.login(data);
         call.enqueue(new Callback<LoginResult>() {
