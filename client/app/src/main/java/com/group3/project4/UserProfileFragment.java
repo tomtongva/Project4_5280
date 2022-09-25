@@ -133,7 +133,29 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.imageButtonLogout.setOnClickListener(v -> mListener.signOut());
+        binding.imageButtonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<UpdateUserResult> call = retrofitInterface.updateUser("LOGGING-OUT", new HashMap());
+                call.enqueue(new Callback<UpdateUserResult>() {
+                    @Override
+                    public void onResponse(Call<UpdateUserResult> call, Response<UpdateUserResult> response) {
+                        if (response.code() == 200) {
+                            UpdateUserResult result = response.body();
+                            Toast.makeText(getActivity(), "Gone with the wind", Toast.LENGTH_LONG).show();
+                            mListener.signOut();
+                        } else {
+                            Toast.makeText(getActivity(), "Cannot exit app at this time", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UpdateUserResult> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
 
         binding.imageButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override

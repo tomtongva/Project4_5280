@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 const jwt  = require("jsonwebtoken");
 const jwtSecret = "Group3KeyForJWT";
+const headerTokenKey = "x-jwt-token";
 
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
@@ -11,7 +12,13 @@ app.listen(port, () => {
 const jwtValidateUserMiddleware = (req, res, next) => {
     console.log("validate user");
 
-    let token = req.header("x-jwt-token");
+    let token = req.header(headerTokenKey);
+    if (token == "LOGGING-OUT") {
+        console.log("user logout");
+        res.send({message: "good to exit"});
+        return;
+    }
+
     if (token) {
         try {
             console.log("verify " + token)
@@ -77,7 +84,11 @@ app.post('/api/signup', async (req, res) => {
         lastName: req.body.lastName, gender: req.body.gender, city: req.body.city});
 });
 
-
+app.post('/api/logout', async (req, res) => {
+    console.log("logout user " + req.body.email);
+    delete req.headers[headerTokenKey];
+    let userId;
+}, jwtValidateUserMiddleware);
 
 const { MongoClient } = require("mongodb");
 // Connection URI
@@ -127,7 +138,7 @@ async function updateUser(email, firstName, lastName, gender, city) {
         await client.connect();
         
         const filter = {email: email};
-        console.log("attemp to update " + email);
+        console.log("attempt to update " + email);
         const updateDoc = {$set: {firstName: firstName, lastName: lastName, gender: gender, city: city}};
         var updated = await client.db("users").collection("user").updateOne(filter, updateDoc);
         if (updated) {

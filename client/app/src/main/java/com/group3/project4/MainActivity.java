@@ -1,8 +1,10 @@
 package com.group3.project4;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.project4.R;
@@ -93,7 +95,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void signOut() {
+        finishAffinity();
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.containerview, new LoginFragment(), "LoginFragment")
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
