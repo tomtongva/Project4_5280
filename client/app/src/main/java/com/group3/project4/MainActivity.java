@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
                     LoginResult result = response.body();
                     user = new User(result.getId(), result.getEmail(), result.getFirstName(),
                             result.getLastName(), result.getCity(),
-                            result.getGender(), "");
+                            result.getGender(), "", result.getToken());
 
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.containerview, UserProfileFragment.newInstance(user), "UserProfileFragment")
@@ -93,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void signOut() {
+
+    }
+
+    @Override
+    public void updateUserProfile() {
 
     }
 }

@@ -26,8 +26,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class UserProfileFragment extends Fragment {
     FragmentUserProfileBinding binding;
+    RetrofitInterface retrofitInterface;
+    Retrofit retrofit;
 
     private static final String USER = "USER";
    /* FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -38,6 +48,7 @@ public class UserProfileFragment extends Fragment {
     public interface IListener {
         public void chooseProfileImage();
         public void signOut();
+        public void updateUserProfile();
     }
 
     @Override
@@ -69,6 +80,13 @@ public class UserProfileFragment extends Fragment {
         if (getArguments() != null) {
             this.user = (User) getArguments().getSerializable(USER);
         }
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Globals.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
     }
 
     @Override
@@ -87,14 +105,14 @@ public class UserProfileFragment extends Fragment {
             binding.imageButtonLogout.setVisibility(View.VISIBLE);
             onProfileImageClick();
 //        } else {
-            getActivity().setTitle("Profile Detail");
-            binding.imageUserProfile.setFocusable(false);
-            binding.inputUserProfileFirstName.setFocusable(false);
-            binding.inputUserProfileLastName.setFocusable(false);
-            binding.radioBtnUserProfileMale.setEnabled(false);
-            binding.radioBtnUserProfileFemale.setEnabled(false);
-            binding.imageButtonSave.setVisibility(View.INVISIBLE);
-            binding.imageButtonLogout.setVisibility(View.INVISIBLE);
+//            getActivity().setTitle("Profile Detail");
+//            binding.imageUserProfile.setFocusable(false);
+//            binding.inputUserProfileFirstName.setFocusable(false);
+//            binding.inputUserProfileLastName.setFocusable(false);
+//            binding.radioBtnUserProfileMale.setEnabled(false);
+//            binding.radioBtnUserProfileFemale.setEnabled(false);
+//            binding.imageButtonSave.setVisibility(View.INVISIBLE);
+//            binding.imageButtonLogout.setVisibility(View.INVISIBLE);
 //        }
 
         binding.inputUserProfileFirstName.setText(user.getFirst_name());
@@ -153,6 +171,32 @@ public class UserProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "Please select a gender", Toast.LENGTH_LONG).show();
                     error[0] = "No gender selected";
                     showAlert(error[0]);
+                } else {
+                    HashMap<String, String> data = new HashMap<>();
+                    data.put("email", user.email);
+                    data.put("firstName", firstName);
+                    data.put("lastName", lastName);
+                    data.put("city", city);
+                    data.put("gender", gender);
+
+                    Call<UpdateUserResult> call = retrofitInterface.updateUser(user.getToken(), data);
+                    call.enqueue(new Callback<UpdateUserResult>() {
+                        @Override
+                        public void onResponse(Call<UpdateUserResult> call, Response<UpdateUserResult> response) {
+                            if (response.code() == 200) {
+                                UpdateUserResult result = response.body();
+                                Toast.makeText(getActivity(), "Profile updated", Toast.LENGTH_LONG).show();
+                                mListener.updateUserProfile();
+                            } else {
+                                Toast.makeText(getActivity(), "Something went wrong with profile update", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UpdateUserResult> call, Throwable t) {
+                            Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 /*else {
                     FirebaseAuth mAuthLocal = FirebaseAuth.getInstance();

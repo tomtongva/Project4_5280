@@ -143,7 +143,6 @@ public class SignupFragment extends Fragment {
                     showAlert(error[0]);
                 } else {
 //                    FirebaseAuth mAuthLocal = FirebaseAuth.getInstance();
-                    String finalGender = gender;
                     HashMap<String, String> data = new HashMap<>();
                     data.put("email", email);
                     data.put("password", password);

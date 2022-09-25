@@ -20,7 +20,7 @@ const jwtValidateUserMiddleware = (req, res, next) => {
             console.log("user validated " + decoded);
             next();
         } catch (err) {
-            res.status(401).status({error: "Invalid token", fullError: err});
+            res.status(401).send({error: "Invalid token", fullError: err});
         }
     } else {
         res.status(401).send({error: "Token is required"});
@@ -34,8 +34,10 @@ app.post("/api/auth", async (req, res) => {
     let user = await findUser(req.body.email);
     console.log("found " + user);
     if (user) {
-        let token = jwt.sign({uid: user._id, name: user.name}, jwtSecret);
-        console.log("generating token for " + user.name);
+        let token = jwt.sign({uid: user._id, name: user.firstName + " " + user.lastName, 
+                                exp:Math.floor(Date.now()/1000)+60*1,
+                                currentTime:Date.now()}, jwtSecret);
+        console.log("generating token for " + user.firstName);
 
         res.send({email: user.email, firstName: user.firstName, lastName: user.lastName, gender: user.gender,
             city: user.city, token: token});
@@ -44,14 +46,18 @@ app.post("/api/auth", async (req, res) => {
     }
 });
 
-app.post('/api/users', jwtValidateUserMiddleware, (req, res) => {
-    console.log("send response back");
-    
-    let decodedToken = req.decodedToken
+app.post('/api/user/update', jwtValidateUserMiddleware, async (req, res) => {
+    let updated = await updateUser(req.body.email, req.body.firstName, req.body.lastName, req.body.gender, req.body.city);
+    if (updated) {
+        console.log("send successful updated response back");
+        
+        let decodedToken = req.decodedToken
 
-    res.send({message:"Hello world users post ", data: {decoded: decodedToken}});
-    console.log(req.body);
-    console.log(req.body.name);
+        res.send({message:"user updated", data: {decoded: decodedToken}});
+    } else {
+        console.log("send failed update response back");
+        res.status(401).send({error: "user update failed"});
+    }
 });
 
 app.post('/api/signup', async (req, res) => {
@@ -111,6 +117,23 @@ async function findUser(email) {
             console.log("user is " + user.name);
             return user;
         }
+      } finally {
+        await client.close();
+      }
+}
+
+async function updateUser(email, firstName, lastName, gender, city) {
+    try {
+        await client.connect();
+        
+        const filter = {email: email};
+        console.log("attemp to update " + email);
+        const updateDoc = {$set: {firstName: firstName, lastName: lastName, gender: gender, city: city}};
+        var updated = await client.db("users").collection("user").updateOne(filter, updateDoc);
+        if (updated) {
+            console.log("user was updated")
+        }
+        return updated;
       } finally {
         await client.close();
       }
