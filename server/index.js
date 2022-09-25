@@ -47,14 +47,16 @@ app.post("/api/auth", async (req, res) => {
         console.log("generating token for " + user.firstName);
 
         res.send({email: user.email, firstName: user.firstName, lastName: user.lastName, gender: user.gender,
-            city: user.city, token: token});
+            city: user.city, token: token, age: user.age, weight: user.weight, address: user.address});
     } else {
         res.status(401).send({error: "You're not found"});
     }
 });
 
 app.post('/api/user/update', jwtValidateUserMiddleware, async (req, res) => {
-    let updated = await updateUser(req.body.email, req.body.firstName, req.body.lastName, req.body.gender, req.body.city);
+    console.log("the age is " + req.body.age);
+    let updated = await updateUser(req.body.email, req.body.firstName, req.body.lastName, req.body.gender, req.body.city,
+                                    req.body.age, req.body.weight, req.body.address);
     if (updated) {
         console.log("send successful updated response back");
         
@@ -133,16 +135,17 @@ async function findUser(email) {
       }
 }
 
-async function updateUser(email, firstName, lastName, gender, city) {
+async function updateUser(email, firstName, lastName, gender, city, age, weight, address) {
     try {
         await client.connect();
         
         const filter = {email: email};
         console.log("attempt to update " + email);
-        const updateDoc = {$set: {firstName: firstName, lastName: lastName, gender: gender, city: city}};
+        const updateDoc = {$set: {firstName: firstName, lastName: lastName, gender: gender, city: city,
+                                    age: age, weight: weight, address: address}};
         var updated = await client.db("users").collection("user").updateOne(filter, updateDoc);
         if (updated) {
-            console.log("user was updated")
+            console.log("user was updated " + age)
         }
         return updated;
       } finally {

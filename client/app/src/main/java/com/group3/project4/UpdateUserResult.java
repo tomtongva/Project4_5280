@@ -11,6 +11,10 @@ public class UpdateUserResult {
     @SerializedName("email")
     String email;
     String password;
+    @SerializedName("age")
+    int age;
+    int weight;
+    String address;
 
     public String getId() {
         return id;
@@ -58,5 +62,29 @@ public class UpdateUserResult {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

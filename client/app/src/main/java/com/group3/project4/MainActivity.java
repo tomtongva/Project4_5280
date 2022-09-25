@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements
                     LoginResult result = response.body();
                     user = new User(result.getId(), result.getEmail(), result.getFirstName(),
                             result.getLastName(), result.getCity(),
-                            result.getGender(), "", result.getToken());
+                            result.getGender(), "", result.getToken(), result.getAge(), result.getWeight(),
+                            result.getAddress());
 
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.containerview, UserProfileFragment.newInstance(user), "UserProfileFragment")

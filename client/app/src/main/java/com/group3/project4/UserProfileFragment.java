@@ -103,6 +103,9 @@ public class UserProfileFragment extends Fragment {
             binding.radioBtnUserProfileFemale.setEnabled(true);
             binding.imageButtonSave.setVisibility(View.VISIBLE);
             binding.imageButtonLogout.setVisibility(View.VISIBLE);
+            binding.inputUserProfileAge.setFocusable(true);
+            binding.inputUserProfileWeight.setFocusable(true);
+            binding.inputUserProfileAddress.setFocusable(true);
             onProfileImageClick();
 //        } else {
 //            getActivity().setTitle("Profile Detail");
@@ -118,6 +121,12 @@ public class UserProfileFragment extends Fragment {
         binding.inputUserProfileFirstName.setText(user.getFirst_name());
         binding.inputUserProfileLastName.setText(user.getLast_name());
         binding.inputUserProfileCity.setText(user.getCity());
+        binding.inputUserProfileAddress.setText(user.getAddress());
+
+        if (user.getAge() > 0)
+            binding.inputUserProfileAge.setText(user.getAge() + "");
+        if (user.getWeight() > 0)
+            binding.inputUserProfileWeight.setText(user.getWeight() + "");
 
         if (User.FEMALE.equals(user.getGender())) {
             binding.radioBtnUserProfileFemale.setChecked(true);
@@ -165,6 +174,15 @@ public class UserProfileFragment extends Fragment {
                 String firstName = binding.inputUserProfileFirstName.getText().toString();
                 String lastName = binding.inputUserProfileLastName.getText().toString();
                 String city = binding.inputUserProfileCity.getText().toString();
+                String address = binding.inputUserProfileAddress.getText().toString();
+                int age = 0;
+                int weight = 0;
+
+                if (!binding.inputUserProfileAge.getText().toString().trim().isEmpty())
+                    age = Integer.parseInt(binding.inputUserProfileAge.getText().toString());
+
+                if (!binding.inputUserProfileWeight.getText().toString().trim().isEmpty())
+                    weight = Integer.parseInt(binding.inputUserProfileWeight.getText().toString().trim());
 
                 int selectedRadioButton = binding.radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = binding.radioGroup.findViewById(selectedRadioButton);
@@ -194,12 +212,15 @@ public class UserProfileFragment extends Fragment {
                     error[0] = "No gender selected";
                     showAlert(error[0]);
                 } else {
-                    HashMap<String, String> data = new HashMap<>();
+                    HashMap<String, Object> data = new HashMap<>();
                     data.put("email", user.email);
                     data.put("firstName", firstName);
                     data.put("lastName", lastName);
                     data.put("city", city);
                     data.put("gender", gender);
+                    data.put("age", age);
+                    data.put("weight", weight);
+                    data.put("address", address);
 
                     Call<UpdateUserResult> call = retrofitInterface.updateUser(user.getToken(), data);
                     call.enqueue(new Callback<UpdateUserResult>() {

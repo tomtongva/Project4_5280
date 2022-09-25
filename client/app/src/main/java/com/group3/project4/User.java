@@ -7,16 +7,17 @@ public class User implements Serializable {
     public static String FEMALE = "FEMALE";
     public static String MALE = "MALE";
 
-    String email, username, first_name, last_name, city, gender, image_location, id;
+    String email, username, first_name, last_name, city, gender, image_location, id, address;
     Boolean is_deleted;
     String token;
+    int age, weight;
 
     public User() {
         // empty constructor
     }
 
     public User(String id, String email, String first_name, String last_name, String city, String gender, String image_location,
-            String token) {
+            String token, int age, int weight, String address) {
         this.id = id;
         this.email = email;
         this.first_name = first_name;
@@ -27,11 +28,15 @@ public class User implements Serializable {
         username = String.valueOf(first_name.toLowerCase().charAt(0)) + last_name.toLowerCase();
         this.image_location = image_location;
         is_deleted = false;
+
         this.token = token;
+        this.age = age;
+        this.weight = weight;
+        this.address = address;
     }
 
     public User(String email, String username, String first_name, String last_name, String city,
-                String gender, String image_location, Boolean is_deleted, String token) {
+                String gender, String image_location, Boolean is_deleted, String token, int age, int weight, String address) {
         this.email = email;
         this.username = username;
         this.first_name = first_name;
@@ -41,6 +46,9 @@ public class User implements Serializable {
         this.image_location = image_location;
         this.is_deleted = is_deleted;
         this.token = token;
+        this.age = age;
+        this.weight = weight;
+        this.address = address;
     }
 
     public String getId() {
@@ -121,6 +129,30 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     @Override
